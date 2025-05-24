@@ -6,17 +6,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = 'phuong'
 
-# Khởi tạo database
+
 def init_db():
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
-    # Bảng users với cột name
+    # Bảng users
     c.execute('''CREATE TABLE IF NOT EXISTS users
                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
                   name TEXT NOT NULL,
                   email TEXT NOT NULL UNIQUE,
                   password TEXT NOT NULL)''')
-    # Bảng todos với cột completed_at
+    # Bảng todos
     c.execute('''CREATE TABLE IF NOT EXISTS todos
                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
                   task TEXT NOT NULL,
@@ -30,7 +30,6 @@ def init_db():
 
 init_db()
 
-# Kiểm tra người dùng đã đăng nhập
 def login_required(f):
     def wrap(*args, **kwargs):
         if 'user_id' not in session:
@@ -45,10 +44,8 @@ def login_required(f):
 def index():
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
-    # Lấy tên người dùng
     c.execute('SELECT name FROM users WHERE id = ?', (session['user_id'],))
     user_name = c.fetchone()[0]
-    # Lấy danh sách công việc
     c.execute('SELECT id, task, completed, created_at, completed_at FROM todos WHERE user_id = ? ORDER BY created_at DESC',
               (session['user_id'],))
     todos = c.fetchall()
