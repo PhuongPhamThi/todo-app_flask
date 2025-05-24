@@ -4,7 +4,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Thay bằng key bí mật mạnh hơn trong sản xuất
+app.secret_key = 'phuong'
 
 # Khởi tạo database
 def init_db():
